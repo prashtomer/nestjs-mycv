@@ -12,10 +12,14 @@ export class UsersService {
     // If instead of user we try to save plain object containing email and password property it will also work but entity hooks will not get triggered since we have not created an entity.
     // insert, update and delete methods of repo work with plain javascript objects and hence won't trigger entity hooks
     // Use save (instead of insert/update) or remove (instead of delete) method if you want to trigger entity hooks
-    this.repo.save(user);
+    return this.repo.save(user);
   }
 
   findOne(id: number) {
+    // findOne will return the first user in the database if id is null
+    if (!id) {
+      return null;
+    }
     return this.repo.findOneBy({ id });
   }
 
