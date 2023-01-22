@@ -14,6 +14,7 @@ import {
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
 
 @Controller('auth')
 export class UsersController {
@@ -24,12 +25,10 @@ export class UsersController {
     this.usersService.create(body.email, body.password);
   }
 
-  // Used to intercept the outgoing reposne
-  // remove password field from the response
-  // This is not scalable because if based on route handler we want to filter out information other than email than it won't work hence use custom interceptor
-  @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(SerializeInterceptor)
   @Get('/:id')
   async findUser(@Param('id') id: string) {
+    console.log('handler is running');
     const user = await this.usersService.findOne(parseInt(id));
 
     if (!user) {
