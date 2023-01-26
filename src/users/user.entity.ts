@@ -20,6 +20,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: true })
+  admin: boolean;
+
   // will not make any change in the users table
   @OneToMany(() => Report, (report) => report.user)
   reports: Report[];
