@@ -25,6 +25,9 @@ export class ReportDto {
   @Expose()
   mileage: number;
 
+  @Expose()
+  approved: boolean;
+
   // fetch user id from the report entity
   @Transform(({ obj }) => obj.user.id)
   @Expose()
