@@ -55,6 +55,7 @@ const cookieSession = require('cookie-session');
   ],
 })
 export class AppModule {
+  constructor(private configService: ConfigService) {}
   configure(consumer: MiddlewareConsumer) {
     // Globally scoped middleware
     consumer
@@ -62,7 +63,7 @@ export class AppModule {
         // moved here from the main.ts so that it's also available in the integration tests inside the created module
         cookieSession({
           // used for encrypting the cookie
-          keys: ['asasdasd'],
+          keys: [this.configService.get('COOKIE_KEY')],
         }),
       )
       .forRoutes('*');
