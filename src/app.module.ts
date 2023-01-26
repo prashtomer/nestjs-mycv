@@ -6,12 +6,12 @@ import { ReportsModule } from './reports/reports.module';
 import { APP_PIPE } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as process from 'process';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmConfigService } from './config/typeorm.config';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { DBOptions } from '../db.datasourceoptions';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cookieSession = require('cookie-session');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const dbConfig = require('../ormconfig.js');
+// const dbConfig = require('./db.datasourceoptions.js');
 
 @Module({
   imports: [
@@ -22,7 +22,17 @@ const dbConfig = require('../ormconfig.js');
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     TypeOrmModule.forRootAsync({
-      useClass: TypeOrmConfigService,
+      useFactory: (config: ConfigService) => {
+        const dbOptions: TypeOrmModuleOptions = {
+          // retryAttempts: 10,
+          // retryDelay: 3000,
+          // autoLoadEntities: false
+        };
+
+        Object.assign(dbOptions, DBOptions);
+
+        return dbOptions;
+      },
     }),
     UsersModule,
     ReportsModule,
